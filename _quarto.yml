@@ -1,0 +1,20 @@
+project:
+  type: website
+  output-dir: _site
+
+website:
+  title: "Diabetes Risk Prediction"
+  navbar:
+    left:
+      - href: index.qmd
+        text: "Clinical Report"
+
+format:
+  html:
+    theme:
+      light: cosmo
+      dark: superhero
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    code-tools: true
