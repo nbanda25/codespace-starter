@@ -41,11 +41,12 @@ ui <- dashboardPage(
   dashboardSidebar(
     width = 280,
     sidebarMenu(
+      menuItem("📖 Project Report", tabName = "report", icon = icon("book")),
       menuItem("Patient Overview", tabName = "overview", icon = icon("users")),
       menuItem("Clinical Intervention Simulator", tabName = "simulator", icon = icon("heartbeat")),
       menuItem("Demographics & Lifestyle", tabName = "demographics", icon = icon("id-card")),
       menuItem("Biomarker Correlation", tabName = "biomarkers", icon = icon("flask")),
-      menuItem("📖 Project Report", tabName = "report", icon = icon("book"))
+      menuItem("📝 Project Summary", tabName = "summary", icon = icon("clipboard-check"))
     )
   ),
   
@@ -480,117 +481,7 @@ ui <- dashboardPage(
     ),
     
     tabItems(
-      # --- Tab 1: Patient Overview ---
-      tabItem(
-        tabName = "overview",
-        fluidRow(
-          valueBoxOutput("total_patients", width = 4),
-          valueBoxOutput("pct_diabetic", width = 4),
-          valueBoxOutput("pct_risk", width = 4)
-        ),
-        fluidRow(
-          box(
-            title = "Patient Population Risk Tier Distribution", 
-            status = "primary", 
-            solidHeader = TRUE, 
-            width = 6,
-            plotlyOutput("risk_dist_plot", height = "400px")
-          ),
-          box(
-            title = "HbA1c Levels Across Risk Tiers", 
-            status = "primary", 
-            solidHeader = TRUE, 
-            width = 6,
-            plotlyOutput("clinical_metrics_plot", height = "400px")
-          )
-        )
-      ),
-      
-      # --- Tab 2: Clinical Intervention Simulator ---
-      tabItem(
-        tabName = "simulator",
-        fluidRow(
-          box(
-            title = "Simulation Parameters", 
-            status = "warning", 
-            solidHeader = TRUE, 
-            width = 4,
-            sliderInput(
-              "sim_bmi_drop", 
-              "Population BMI Reduction:",
-              min = 0, 
-              max = 20, 
-              value = 0, 
-              step = 1, 
-              post = "%"
-            ),
-            tags$p(
-              style = "margin-top: 15px; color: #333; font-size: 13px; text-shadow: 0 1px 0 #fff; line-height: 1.45;",
-              "This simulator models a counterfactual clinical scenario. By shifting the entire cohort's BMI distribution downward by the selected percentage, it estimates the potential reduction in diabetes prevalence using a baseline logistic regression model."
-            ),
-            hr(style = "border-top: 1px solid #a0a0a0; border-bottom: 1px solid #fff;"),
-            tags$div(
-              style = "background: linear-gradient(to bottom, #fff8e8, #fff0c2); border: 1px solid #b78a00; padding: 12px; border-radius: 5px; color: #665000; font-size: 12px; box-shadow: inset 0 1px 0 #fff, 0 2px 4px rgba(0,0,0,0.06); text-shadow: 0 1px 0 #fff;",
-              tags$strong("Note:"), " The model controls for patient age, HbA1c level, blood glucose level, hypertension history, and heart disease history."
-            )
-          ),
-          box(
-            title = "Simulated Population Impact Study", 
-            status = "success", 
-            solidHeader = TRUE, 
-            width = 8,
-            uiOutput("sim_text"),
-            hr(style = "border-top: 1px solid #a0a0a0; border-bottom: 1px solid #fff;"),
-            plotlyOutput("sim_plot", height = "350px")
-          )
-        )
-      ),
-      
-      # --- Tab 3: Demographics & Lifestyle ---
-      tabItem(
-        tabName = "demographics",
-        fluidRow(
-          box(
-            title = "Diabetes Prevalence by Age Group", 
-            status = "primary", 
-            solidHeader = TRUE, 
-            width = 6,
-            plotlyOutput("age_plot", height = "400px")
-          ),
-          box(
-            title = "Risk Tier Distribution by Smoking History", 
-            status = "primary", 
-            solidHeader = TRUE, 
-            width = 6,
-            plotlyOutput("smoking_plot", height = "400px")
-          )
-        )
-      ),
-      
-      # --- Tab 4: Biomarker Correlation ---
-      tabItem(
-        tabName = "biomarkers",
-        fluidRow(
-          box(
-            title = "Clinical Biomarker Interaction (Sampled Cohort)", 
-            status = "primary", 
-            solidHeader = TRUE, 
-            width = 6,
-            plotlyOutput("biomarker_scatter", height = "400px"),
-            helpText(style = "text-align: center; font-size: 11px; color: #555; margin-top: 5px;", 
-                     "Visualizing a random sample of 2,000 patients for responsive interaction.")
-          ),
-          box(
-            title = "Cardiovascular Comorbidities & Diabetes Risk", 
-            status = "primary", 
-            solidHeader = TRUE, 
-            width = 6,
-            plotlyOutput("comorbidity_plot", height = "400px")
-          )
-        )
-      ),
-      
-      # --- Tab 5: Project Report ---
+      # --- TAB 1: Project Report (FIRST TAB BY DEFAULT) ---
       tabItem(
         tabName = "report",
         fluidRow(
@@ -725,6 +616,182 @@ ui <- dashboardPage(
             )
           )
         )
+      ),
+
+      # --- TAB 2: Patient Overview ---
+      tabItem(
+        tabName = "overview",
+        fluidRow(
+          valueBoxOutput("total_patients", width = 4),
+          valueBoxOutput("pct_diabetic", width = 4),
+          valueBoxOutput("pct_risk", width = 4)
+        ),
+        fluidRow(
+          box(
+            title = "Patient Population Risk Tier Distribution", 
+            status = "primary", 
+            solidHeader = TRUE, 
+            width = 6,
+            plotlyOutput("risk_dist_plot", height = "400px")
+          ),
+          box(
+            title = "HbA1c Levels Across Risk Tiers", 
+            status = "primary", 
+            solidHeader = TRUE, 
+            width = 6,
+            plotlyOutput("clinical_metrics_plot", height = "400px")
+          )
+        )
+      ),
+      
+      # --- TAB 3: Clinical Intervention Simulator ---
+      tabItem(
+        tabName = "simulator",
+        fluidRow(
+          box(
+            title = "Simulation Parameters", 
+            status = "warning", 
+            solidHeader = TRUE, 
+            width = 4,
+            sliderInput(
+              "sim_bmi_drop", 
+              "Population BMI Reduction:",
+              min = 0, 
+              max = 20, 
+              value = 0, 
+              step = 1, 
+              post = "%"
+            ),
+            tags$p(
+              style = "margin-top: 15px; color: #333; font-size: 13px; text-shadow: 0 1px 0 #fff; line-height: 1.45;",
+              "This simulator models a counterfactual clinical scenario. By shifting the entire cohort's BMI distribution downward by the selected percentage, it estimates the potential reduction in diabetes prevalence using a baseline logistic regression model."
+            ),
+            hr(style = "border-top: 1px solid #a0a0a0; border-bottom: 1px solid #fff;"),
+            tags$div(
+              style = "background: linear-gradient(to bottom, #fff8e8, #fff0c2); border: 1px solid #b78a00; padding: 12px; border-radius: 5px; color: #665000; font-size: 12px; box-shadow: inset 0 1px 0 #fff, 0 2px 4px rgba(0,0,0,0.06); text-shadow: 0 1px 0 #fff;",
+              tags$strong("Note:"), " The model controls for patient age, HbA1c level, blood glucose level, hypertension history, and heart disease history."
+            )
+          ),
+          box(
+            title = "Simulated Population Impact Study", 
+            status = "success", 
+            solidHeader = TRUE, 
+            width = 8,
+            uiOutput("sim_text"),
+            hr(style = "border-top: 1px solid #a0a0a0; border-bottom: 1px solid #fff;"),
+            plotlyOutput("sim_plot", height = "350px")
+          )
+        )
+      ),
+      
+      # --- TAB 4: Demographics & Lifestyle ---
+      tabItem(
+        tabName = "demographics",
+        fluidRow(
+          box(
+            title = "Diabetes Prevalence by Age Group", 
+            status = "primary", 
+            solidHeader = TRUE, 
+            width = 6,
+            plotlyOutput("age_plot", height = "400px")
+          ),
+          box(
+            title = "Risk Tier Distribution by Smoking History", 
+            status = "primary", 
+            solidHeader = TRUE, 
+            width = 6,
+            plotlyOutput("smoking_plot", height = "400px")
+          )
+        )
+      ),
+      
+      # --- TAB 5: Biomarker Correlation ---
+      tabItem(
+        tabName = "biomarkers",
+        fluidRow(
+          box(
+            title = "Clinical Biomarker Interaction (Sampled Cohort)", 
+            status = "primary", 
+            solidHeader = TRUE, 
+            width = 6,
+            plotlyOutput("biomarker_scatter", height = "400px"),
+            helpText(style = "text-align: center; font-size: 11px; color: #555; margin-top: 5px;", 
+                     "Visualizing a random sample of 2,000 patients for responsive interaction.")
+          ),
+          box(
+            title = "Cardiovascular Comorbidities & Diabetes Risk", 
+            status = "primary", 
+            solidHeader = TRUE, 
+            width = 6,
+            plotlyOutput("comorbidity_plot", height = "400px")
+          )
+        )
+      ),
+
+      # --- TAB 6: Project Summary (LAST TAB) ---
+      tabItem(
+        tabName = "summary",
+        fluidRow(
+          box(
+            title = "📝 Project Summary & Class Showcase Catalog Entry",
+            status = "primary",
+            solidHeader = TRUE,
+            width = 12,
+            tags$div(
+              class = "tiger-document",
+              
+              tags$h3("Class Showcase Catalog Entry"),
+              tags$div(
+                class = "tiger-formula-box",
+                style = "font-size: 14px; font-weight: bold; color: #0c4280; line-height: 1.6;",
+                "Name: Patient Diabetes Risk & Intervention Simulator. Multivariable logistic regression modeling on 100,000 clinical records identified HbA1c (OR: 10.34, 95% CI: 9.64–11.09), blood glucose level (OR: 1.034, 95% CI: 1.033–1.035), and hypertension (OR: 2.15, 95% CI: 1.96–2.35) as primary diagnostic risk drivers. Evaluated across 10-fold cross-validation, the pipeline achieved 96.2% ROC-AUC and 95.9% accuracy with high clinical sensitivity optimized for diagnostic screening."
+              ),
+              
+              tags$h3("Project Highlights & Performance Metrics"),
+              tags$table(
+                tags$thead(
+                  tags$tr(
+                    tags$th("Evaluation Domain"),
+                    tags$th("Metric / Result"),
+                    tags$th("Methodological Specification")
+                  )
+                ),
+                tags$tbody(
+                  tags$tr(
+                    tags$td(tags$strong("Total Cohort Size")),
+                    tags$td(tags$span(class = "stat-pill", "96,146 Patients")),
+                    tags$td("Deduplicated clinical records from 100k raw dataset.")
+                  ),
+                  tags$tr(
+                    tags$td(tags$strong("Overall Diabetes Prevalence")),
+                    tags$td(tags$span(class = "stat-pill", "8.82%")),
+                    tags$td("Stratified random train/test split (80/20).")
+                  ),
+                  tags$tr(
+                    tags$td(tags$strong("10-Fold CV Accuracy")),
+                    tags$td(tags$span(class = "stat-pill", "95.9%")),
+                    tags$td("Resampled evaluation across 10 training folds.")
+                  ),
+                  tags$tr(
+                    tags$td(tags$strong("10-Fold CV ROC-AUC")),
+                    tags$td(tags$span(class = "stat-pill", "96.2%")),
+                    tags$td("High discrimination capability across probability thresholds.")
+                  ),
+                  tags$tr(
+                    tags$td(tags$strong("Dominant Clinical Predictor")),
+                    tags$td(tags$span(class = "stat-pill", "HbA1c Level (OR: 10.34)")),
+                    tags$td("95% CI: [9.64 – 11.09], p < 0.001.")
+                  )
+                )
+              ),
+              
+              tags$h3("Executive Summary"),
+              tags$p(
+                "This project delivers an end-to-end, reproducible clinical machine learning classification pipeline and interactive decision-support application built in R using the tidymodels and Shiny frameworks. The system enables healthcare providers to evaluate patient-level metabolic risk, inspect population-wide demographic trends, and model counterfactual public health interventions."
+              )
+            )
+          )
+        )
       )
     )
   )
@@ -735,7 +802,7 @@ ui <- dashboardPage(
 # ==============================================================================
 server <- function(input, output, session) {
   
-  # --- TAB 1: Patient Overview Server Output ---
+  # --- TAB: Patient Overview Server Output ---
   
   # KPI 1: Total Patient Count (Classic Blue Gel)
   output$total_patients <- renderValueBox({
@@ -847,7 +914,7 @@ server <- function(input, output, session) {
       )
   })
   
-  # --- TAB 2: Simulator Server Output ---
+  # --- TAB: Simulator Server Output ---
   
   # Reactive calculations for BMI shift simulation
   sim_data <- reactive({
@@ -942,7 +1009,7 @@ server <- function(input, output, session) {
       )
   })
   
-  # --- TAB 3: Demographics & Lifestyle Server Output ---
+  # --- TAB: Demographics & Lifestyle Server Output ---
   
   # Chart 3: Diabetes Prevalence by Age Group
   output$age_plot <- renderPlotly({
@@ -1029,7 +1096,7 @@ server <- function(input, output, session) {
       )
   })
   
-  # --- TAB 4: Biomarker Correlation Server Output ---
+  # --- TAB: Biomarker Correlation Server Output ---
   
   # Chart 5: Biomarker Scatter Plot (HbA1c vs Blood Glucose Level)
   output$biomarker_scatter <- renderPlotly({

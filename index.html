@@ -530,11 +530,12 @@
     <!-- Sidebar -->
     <aside>
       <ul class="sidebar-menu">
-        <li id="menu-overview" class="active"><a onclick="switchTab('overview')"><i class="fas fa-users"></i> Patient Overview</a></li>
+        <li id="menu-report" class="active"><a onclick="switchTab('report')"><i class="fas fa-book"></i> 📖 Project Report</a></li>
+        <li id="menu-overview"><a onclick="switchTab('overview')"><i class="fas fa-users"></i> Patient Overview</a></li>
         <li id="menu-simulator"><a onclick="switchTab('simulator')"><i class="fas fa-heartbeat"></i> Clinical Intervention Simulator</a></li>
         <li id="menu-demographics"><a onclick="switchTab('demographics')"><i class="fas fa-id-card"></i> Demographics & Lifestyle</a></li>
         <li id="menu-biomarkers"><a onclick="switchTab('biomarkers')"><i class="fas fa-flask"></i> Biomarker Correlation</a></li>
-        <li id="menu-report"><a onclick="switchTab('report')"><i class="fas fa-book"></i> 📖 Project Report</a></li>
+        <li id="menu-summary"><a onclick="switchTab('summary')"><i class="fas fa-clipboard-check"></i> 📝 Project Summary</a></li>
       </ul>
     </aside>
 
@@ -542,7 +543,7 @@
     <main>
       
       <!-- TAB 1: Patient Overview -->
-      <div id="tab-overview" class="tab-content active">
+      <div id="tab-overview" class="tab-content">
         <div class="kpi-row">
           <div class="small-box bg-navy">
             <h3 id="kpi-total-patients">96,146</h3>
@@ -683,7 +684,7 @@
 
 
       <!-- TAB 5: Project Report -->
-      <div id="tab-report" class="tab-content">
+      <div id="tab-report" class="tab-content active">
         <div class="grid-row">
           <div class="col-12" style="width: 100%;">
             <div class="box">
@@ -810,6 +811,72 @@ Logistic Regression Odds Ratio Formula:
                   <h3>4. Clinical Sensitivity & Diagnostic Impact</h3>
                   <p>
                     In population-level screening programs, prioritizing clinical sensitivity (recall) minimizes False Negatives—preventing undetected diabetic patients from developing unmonitored cardiovascular and metabolic complications. The cross-validated model provides a stable, highly scalable decision-support framework to empower early clinical intervention.
+                  </p>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: Project Summary (LAST TAB) -->
+      <div id="tab-summary" class="tab-content">
+        <div class="grid-row">
+          <div class="col-12" style="width: 100%;">
+            <div class="box">
+              <div class="box-header">
+                <span class="box-title">📝 Project Summary & Class Showcase Catalog Entry</span>
+              </div>
+              <div class="box-body">
+                <div class="tiger-document">
+                  
+                  <h3>Class Showcase Catalog Entry</h3>
+                  <div class="tiger-formula-box" style="font-size: 14px; font-weight: bold; color: #0c4280; line-height: 1.6;">
+                    Name: Patient Diabetes Risk & Intervention Simulator. Multivariable logistic regression modeling on 100,000 clinical records identified HbA1c (OR: 10.34, 95% CI: 9.64–11.09), blood glucose level (OR: 1.034, 95% CI: 1.033–1.035), and hypertension (OR: 2.15, 95% CI: 1.96–2.35) as primary diagnostic risk drivers. Evaluated across 10-fold cross-validation, the pipeline achieved 96.2% ROC-AUC and 95.9% accuracy with high clinical sensitivity optimized for diagnostic screening.
+                  </div>
+                  
+                  <h3>Project Highlights & Performance Metrics</h3>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Evaluation Domain</th>
+                        <th>Metric / Result</th>
+                        <th>Methodological Specification</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Total Cohort Size</strong></td>
+                        <td><span class="stat-pill">96,146 Patients</span></td>
+                        <td>Deduplicated clinical records from 100k raw dataset.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Overall Diabetes Prevalence</strong></td>
+                        <td><span class="stat-pill">8.82%</span></td>
+                        <td>Stratified random train/test split (80/20).</td>
+                      </tr>
+                      <tr>
+                        <td><strong>10-Fold CV Accuracy</strong></td>
+                        <td><span class="stat-pill">95.9%</span></td>
+                        <td>Resampled evaluation across 10 training folds.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>10-Fold CV ROC-AUC</strong></td>
+                        <td><span class="stat-pill">96.2%</span></td>
+                        <td>High discrimination capability across probability thresholds.</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Dominant Clinical Predictor</strong></td>
+                        <td><span class="stat-pill">HbA1c Level (OR: 10.34)</span></td>
+                        <td>95% CI: [9.64 – 11.09], p &lt; 0.001.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                  <h3>Executive Summary</h3>
+                  <p>
+                    This project delivers an end-to-end, reproducible clinical machine learning classification pipeline and interactive decision-support application built in R using the tidymodels and Shiny frameworks. The system enables healthcare providers to evaluate patient-level metabolic risk, inspect population-wide demographic trends, and model counterfactual public health interventions.
                   </p>
 
                 </div>
