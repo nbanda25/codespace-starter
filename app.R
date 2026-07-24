@@ -1,8 +1,8 @@
 # ==============================================================================
 # Shiny Application: Patient Diabetes Risk & Intervention Simulator
 # Aesthetic Style: Flawless 2000s macOS Aqua / Brushed Metal (Skeuomorphic)
-# Author: Clinical Data Engineer
-# Date: 2026-07-17
+# Author: Clinical Data Engineer & Biostatistician
+# Date: 2026-07-24
 # ==============================================================================
 
 library(shiny)
@@ -45,7 +45,7 @@ ui <- dashboardPage(
       menuItem("Clinical Intervention Simulator", tabName = "simulator", icon = icon("heartbeat")),
       menuItem("Demographics & Lifestyle", tabName = "demographics", icon = icon("id-card")),
       menuItem("Biomarker Correlation", tabName = "biomarkers", icon = icon("flask")),
-      menuItem("📖 System Documentation", tabName = "doc", icon = icon("book"))
+      menuItem("📖 Project Report", tabName = "report", icon = icon("book"))
     )
   ),
   
@@ -590,57 +590,72 @@ ui <- dashboardPage(
         )
       ),
       
-      # --- Tab 5: System Documentation ---
+      # --- Tab 5: Project Report ---
       tabItem(
-        tabName = "doc",
+        tabName = "report",
         fluidRow(
           box(
-            title = "📖 Diabetes Risk Portal — System Documentation & Clinical Findings Report",
+            title = "📖 Diabetes Risk Portal — Publication-Grade Project Report",
             status = "primary",
             solidHeader = TRUE,
             width = 12,
             tags$div(
               class = "tiger-document",
               
-              # Section 1: Simplified Research Question
-              tags$h3("1. Simplified Research Question"),
+              # Section 1: Research Question & Sub-Questions
+              tags$h3("1. Simplified Research Question & Core Objectives"),
               tags$div(
                 class = "tiger-formula-box",
-                tags$strong("Research Question: "),
-                "\"Can we accurately predict whether a patient has diabetes using age, BMI, blood sugar levels, and health history while maximizing clinical sensitivity?\""
+                tags$strong("Primary Research Question: "),
+                "\"Can we accurately predict whether a patient has diabetes using age, BMI, blood sugar levels, and health history—while catching as many diabetic cases as possible?\""
               ),
               tags$p(
-                "This clinical investigation focuses on constructing an interpretable and highly reliable machine learning classification system capable of identifying individuals at high risk for diabetes. Primary operational emphasis is placed on clinical sensitivity to guarantee that patients with active or emerging hyperglycemia are reliably flagged for early medical evaluation and targeted lifestyle or pharmacological interventions."
+                "In clinical predictive modeling, early diagnosis of diabetes mellitus is essential to mitigate long-term microvascular and macrovascular complications. This project develops a publication-grade, reproducible machine learning classification pipeline in R to deliver transparent, actionable risk predictions for healthcare providers."
+              ),
+              tags$h4(tags$strong("Key Analytical Sub-Questions:"), style = "color: #0c4280; font-size: 14px; margin-top: 14px;"),
+              tags$ol(
+                tags$li(
+                  tags$strong("Biomarker vs. Lifestyle Dominance: "),
+                  "Do laboratory diagnostic biomarkers (HbA1c level and blood glucose level) exert a significantly stronger predictive influence on diabetes risk than demographic and lifestyle factors (BMI, age, and smoking history)?"
+                ),
+                tags$li(
+                  tags$strong("High-Sensitivity Decision Thresholding: "),
+                  "How do we optimize and adjust the classification decision threshold for high sensitivity so the model rarely misses a true diabetic patient in clinical screening?"
+                )
               ),
               
-              # Section 2: Methodology & Leakage Prevention
-              tags$h3("2. Methodology & Leakage Prevention"),
+              # Section 2: Methodology (4 Steps)
+              tags$h3("2. Four-Step Analytic Methodology"),
               tags$p(
-                "To ensure mathematical validity, statistical rigor, and complete reproducibility across clinical trial settings, our analytic pipeline employs strict data hygiene practices:"
+                "To guarantee mathematical rigor and complete methodological reproducibility, the analytical pipeline follows a structured four-step workflow:"
               ),
-              tags$ul(
+              tags$ol(
                 tags$li(
-                  tags$strong("80/20 Stratified Train/Test Split: "),
-                  "The cohort dataset of 100,000 patient records was partitioned into an 80% training set (80,000 records) and a 20% held-out test set (20,000 records). Stratification was enforced on the binary diabetes outcome variable to preserve identical class proportions (~8.5% prevalence) across both partitions."
+                  tags$strong("Step 1: Data Cleaning & Risk Tier Sorting — "),
+                  "Categorical variables (gender, smoking history) and binary clinical flags (hypertension, heart disease) were reformatted as factors. Duplicate entries were removed from the cohort of 100,000 patient records. Patients were categorized into four distinct risk tiers (Low Risk, Moderate Risk, High Risk, Diabetic) based on clinical biomarker thresholds."
                 ),
                 tags$li(
-                  tags$strong("Isolated Feature Scaling (Training Set Only): "),
-                  "All continuous numeric predictors (Age, BMI, HbA1c Level, and Blood Glucose Level) were normalized and standardized using mean and standard deviation parameters derived strictly from the training set. The held-out test set was transformed using these frozen training parameters, eliminating any form of data leakage or parameter contamination."
+                  tags$strong("Step 2: 80/20 Stratified Train/Test Split & Leakage Prevention — "),
+                  "The cohort was partitioned into an 80% training set (80,000 records) and a 20% held-out test set (20,000 records) using stratified random sampling on the binary diabetes outcome variable to preserve identical class proportions (~8.5% prevalence). All continuous numeric predictors (Age, BMI, HbA1c, Blood Glucose) were normalized using parameters (mean and standard deviation) derived strictly from the training set to prevent data leakage."
                 ),
                 tags$li(
-                  tags$strong("10-Fold Stratified Cross-Validation: "),
-                  "Internal validation was conducted on the 80% training partition using 10-fold stratified cross-validation. The resampled workflow yielded a mean CV Accuracy of ", tags$span(class = "stat-pill", "95.9%"), " and a mean ROC-AUC of ", tags$span(class = "stat-pill", "96.2%"), ", confirming high model stability before held-out test set evaluation."
+                  tags$strong("Step 3: 10-Fold Cross-Validation Logistic Regression Training — "),
+                  "Model training and hyperparameter evaluation were conducted on the 80% training partition using 10-fold stratified cross-validation with the tidymodels framework and a generalized linear model (glm) logistic regression engine. Resampled cross-validation achieved a mean CV Accuracy of ", tags$span(class = "stat-pill", "95.9%"), " and a mean CV ROC-AUC of ", tags$span(class = "stat-pill", "96.2%"), "."
+                ),
+                tags$li(
+                  tags$strong("Step 4: Model Evaluation Focused on ROC-AUC & Sensitivity — "),
+                  "Final model evaluation was performed on the held-out test set, prioritizing Area Under the Receiver Operating Characteristic Curve (ROC-AUC) and Sensitivity (Recall = TP / (TP + FN)) to ensure high diagnostic efficacy in population health screening."
                 )
               ),
               tags$div(
                 class = "tiger-formula-box",
-                "Data Leakage Prevention Protocol:\n 1. Recipe Blueprint: recipe(diabetes ~ ., data = train_data)\n 2. Normalization Parameters: Calculated strictly on train_data via step_normalize()\n 3. Test Evaluation: bake(prep_recipe, new_data = test_data) using frozen train parameters"
+                "Data Leakage Prevention Protocol:\n 1. Recipe Blueprint: recipe(diabetes ~ ., data = train_data)\n 2. Parameter Calculation: Derived strictly on train_data via step_normalize()\n 3. Test Evaluation: bake(prep_recipe, new_data = test_data) using frozen training parameters"
               ),
               
-              # Section 3: Key Findings & Odds Ratios
-              tags$h3("3. Key Findings & Odds Ratios"),
+              # Section 3: Key Analytical Findings
+              tags$h3("3. Key Analytical Findings & Odds Ratios"),
               tags$p(
-                "Multivariable logistic regression revealed that primary diagnostic biomarkers—specifically HbA1c and Blood Glucose levels—are the dominant clinical drivers of diabetes risk, backed by 95% confidence intervals:"
+                "Multivariable logistic regression demonstrated that diagnostic biomarkers—specifically HbA1c and Blood Glucose levels—are the dominant clinical predictors of diabetes status, as summarized by Odds Ratios (OR) and 95% Confidence Intervals (CI):"
               ),
               tags$table(
                 tags$thead(
@@ -648,7 +663,7 @@ ui <- dashboardPage(
                     tags$th("Clinical Predictor Variable"),
                     tags$th("Odds Ratio (OR)"),
                     tags$th("95% Confidence Interval"),
-                    tags$th("Statistical Significance"),
+                    tags$th("p-value"),
                     tags$th("Clinical Interpretation")
                   )
                 ),
@@ -658,28 +673,28 @@ ui <- dashboardPage(
                     tags$td(tags$span(class = "stat-pill", "10.34")),
                     tags$td("[9.64 – 11.09]"),
                     tags$td("p < 0.001"),
-                    tags$td("Dominant clinical indicator; each 1% increase multiplies odds of diabetes by ~10.3x.")
+                    tags$td("Dominant clinical predictor; each 1% increase in HbA1c multiplies diabetes odds by ~10.3x.")
                   ),
                   tags$tr(
                     tags$td(tags$strong("Blood Glucose Level (mg/dL)")),
                     tags$td(tags$span(class = "stat-pill", "1.034")),
                     tags$td("[1.033 – 1.035]"),
                     tags$td("p < 0.001"),
-                    tags$td("Significant incremental risk; +25 mg/dL glucose translates to ~2.37x higher odds.")
+                    tags$td("Strong continuous predictor; +25 mg/dL in fasting/random glucose increases odds by ~2.37x.")
                   ),
                   tags$tr(
                     tags$td(tags$strong("Hypertension (Yes vs No)")),
                     tags$td(tags$span(class = "stat-pill", "2.15")),
                     tags$td("[1.96 – 2.35]"),
                     tags$td("p < 0.001"),
-                    tags$td("Patients with hypertension have over double the odds of presenting with diabetes.")
+                    tags$td("Co-existing hypertension more than doubles the odds of diabetes diagnosis.")
                   ),
                   tags$tr(
                     tags$td(tags$strong("Heart Disease (Yes vs No)")),
                     tags$td(tags$span(class = "stat-pill", "2.14")),
                     tags$td("[1.90 – 2.41]"),
                     tags$td("p < 0.001"),
-                    tags$td("Cardiovascular comorbidity independently doubles diabetes risk.")
+                    tags$td("History of heart disease independently doubles the odds of diabetes.")
                   ),
                   tags$tr(
                     tags$td(tags$strong("Body Mass Index (BMI)")),
@@ -693,39 +708,19 @@ ui <- dashboardPage(
                     tags$td(tags$span(class = "stat-pill", "1.048")),
                     tags$td("[1.046 – 1.050]"),
                     tags$td("p < 0.001"),
-                    tags$td("Each additional year of age increases odds by ~4.8%.")
+                    tags$td("Each additional year of age increases diabetes odds by ~4.8%.")
                   )
                 )
               ),
               tags$div(
                 class = "tiger-formula-box",
-                "Logistic Regression Odds Ratio Formulation:\n ln( p / (1 - p) ) = β0 + β1(HbA1c) + β2(Glucose) + β3(Hypertension) + β4(HeartDisease) + β5(BMI) + β6(Age)\n Odds Ratio (OR) = exp(β_i)  |  95% CI = exp( β_i ± 1.96 × SE(β_i) )"
+                "Logistic Regression Odds Ratio Formula:\n ln( p / (1 - p) ) = β0 + β1(HbA1c) + β2(Glucose) + β3(Hypertension) + β4(HeartDisease) + β5(BMI) + β6(Age)\n Odds Ratio (OR) = exp(β_i)  |  95% CI = exp( β_i ± 1.96 × SE(β_i) )"
               ),
               
-              # Section 4: Model Sensitivity & Clinical Impact
-              tags$h3("4. Model Sensitivity & Clinical Impact"),
+              # Section 4: Model Sensitivity & Clinical Screening Impact
+              tags$h3("4. Clinical Sensitivity & Diagnostic Impact"),
               tags$p(
-                "In clinical diagnostic decision-support systems, model evaluation metrics must align directly with patient outcomes:"
-              ),
-              tags$ul(
-                tags$li(
-                  tags$strong("Asymmetric Cost of Classification Errors: "),
-                  "A False Negative error (failing to identify an active diabetic patient) is clinically catastrophic, exposing the patient to unchecked hyperglycemia, retinopathy, nephropathy, and cardiovascular events. Conversely, a False Positive error merely triggers follow-up confirmatory blood testing (e.g., fasting plasma glucose)."
-                ),
-                tags$li(
-                  tags$strong("Optimizing Clinical Sensitivity (Recall): "),
-                  "By tuning the classification decision threshold to prioritize Sensitivity (",
-                  tags$code("Sensitivity = TP / (TP + FN)"),
-                  "), the system acts as a high-net diagnostic screen, ensuring that true diabetic cases are rarely missed."
-                ),
-                tags$li(
-                  tags$strong("Population Health Strategy: "),
-                  "Deploying this risk model within outpatient electronic health record (EHR) systems enables automated population-wide screening, empowering clinical care teams to implement preventive interventions long before severe metabolic complications develop."
-                )
-              ),
-              tags$div(
-                class = "tiger-formula-box",
-                "Clinical Sensitivity Formula & Metric Objective:\n Sensitivity (Recall) = True Positives / (True Positives + False Negatives)\n Goal: Maximize Sensitivity -> Minimizes False Negatives (FN -> 0) in Clinical Screening"
+                "In population-level screening programs, prioritizing clinical sensitivity (recall) minimizes False Negatives—preventing undetected diabetic patients from developing unmonitored cardiovascular and metabolic complications. The cross-validated model provides a stable, highly scalable decision-support framework to empower early clinical intervention."
               )
             )
           )
@@ -856,7 +851,7 @@ server <- function(input, output, session) {
   
   # Reactive calculations for BMI shift simulation
   sim_data <- reactive({
-    bmi_drop_pct <- if (!is.null(input$sim_bmi_drop)) input$sim_bmi_drop else input$bmi_reduction
+    bmi_drop_pct <- if (!is.null(input$sim_bmi_drop)) input$sim_bmi_drop else 0
     
     # Counterfactual dataset: lower population BMI via explicit reduction formula
     df_sim <- df %>%
@@ -903,9 +898,9 @@ server <- function(input, output, session) {
           "A population-wide BMI reduction of <strong>", sim$reduction_pct, "%</strong> is predicted to prevent ",
           "<strong>", format(prevented, big.mark = ","), "</strong> cases of diabetes. ",
           "This shift would decrease the expected cohort prevalence from <strong>", baseline_prev, "%</strong> ",
-          "to <strong>", new_prev, "%</strong> (reducing the expected number of active cases from ", 
-          format(round(sim$baseline_cases), big.mark = ","), " down to ", 
-          format(round(sim$expected_cases), big.mark = ","), ")."
+          "to <strong>", new_prev, "%</strong> (reducing expected active cases from <strong>", 
+          format(round(sim$baseline_cases), big.mark = ","), "</strong> down to <strong>", 
+          format(round(sim$expected_cases), big.mark = ","), "</strong>)."
         ))
       )
     )
