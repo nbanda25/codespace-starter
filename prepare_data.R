@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 # ==============================================================================
 # Clinical Data Engineering: Diabetes Dataset Preparation and Risk Stratification
-# Author: Clinical Data Engineer
+# Author: Niket Banda
 # Date: 2026-07-17
 # ==============================================================================
 

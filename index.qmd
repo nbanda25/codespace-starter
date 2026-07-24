@@ -1,7 +1,7 @@
 ---
 title: "Clinical Risk Prediction: Replicable Machine Learning Workflow for Diabetes"
 subtitle: "A Reproducibility Specialist Report in R using Tidyverse & Tidymodels"
-author: "Antigravity (R Reproducibility Specialist)"
+author: "Niket Banda"
 date: today
 format:
   html:
@@ -23,7 +23,7 @@ execute:
 
 In clinical predictive modeling, reproducibility and methodological rigor are paramount. Machine learning models deployed in healthcare settings must not only yield high predictive performance but also guarantee that their training pipelines are fully replicable and free from data leakage. 
 
-This report presents a structured, reproducible end-to-end classification pipeline to predict diabetes using the `diabetes_prediction_dataset.csv`. The dataset comprises 100,000 clinical records containing patient demographics (age, gender), historical health conditions (hypertension, heart_disease), lifestyle metrics (smoking history, body mass index - BMI), and key diagnostic biomarkers (HbA1c level, blood glucose level).
+This report presents a structured, reproducible end-to-end classification pipeline to predict diabetes using the `diabetes_prediction_dataset.csv`. The dataset comprises 96,146 clean clinical evaluation records (deduplicated from the 100,000 raw dataset) containing patient demographics (age, gender), historical health conditions (hypertension, heart_disease), lifestyle metrics (smoking history, body mass index - BMI), and key diagnostic biomarkers (HbA1c level, blood glucose level).
 
 Our modeling strategy uses the R `tidymodels` ecosystem alongside the `tidyverse` for clean, modular, and reliable pipeline engineering. We employ a logistic regression model as a baseline clinical classifier to establish interpretable relationships between the predictors and patient risk.
 
