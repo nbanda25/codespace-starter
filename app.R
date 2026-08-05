@@ -884,18 +884,6 @@ ui <- dashboardPage(
         tabName = "report",
         fluidRow(
           box(
-            title = "📖 Diabetes Risk Portal — Publication-Grade Project Report",
-            status = "primary",
-            solidHeader = TRUE,
-            width = 12,
-            tags$div(
-              class = "tiger-document",
-              
-      # --- TAB 1: Project Report (FIRST TAB BY DEFAULT) ---
-      tabItem(
-        tabName = "report",
-        fluidRow(
-          box(
             title = "🏥 DIABETES RISK PORTAL — PUBLICATION-GRADE PROJECT REPORT",
             status = "primary",
             solidHeader = TRUE,
@@ -1262,7 +1250,36 @@ ui <- dashboardPage(
             title = "Simulation Parameters", 
             status = "warning", 
             solidHeader = TRUE, 
-            width = 4,
+            tags$div(
+              style = "margin-bottom: 18px;",
+              tags$label(
+                style = "font-weight: 600; font-size: 11px; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; display: block;",
+                "⚡ Preset Benchmark Scenarios"
+              ),
+              tags$div(
+                style = "display: flex; flex-direction: column; gap: 6px;",
+                actionButton(
+                  "btn_preset_bmi5", 
+                  HTML("<span>📉 <strong>National 5% BMI Reduction</strong><br><small style='opacity: 0.8;'>BMI -5% | HbA1c Baseline</small></span>"),
+                  style = "width: 100%; text-align: left; background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; padding: 7px 10px; border-radius: 6px; font-size: 12px; margin-bottom: 4px;"
+                ),
+                actionButton(
+                  "btn_preset_hba1c", 
+                  HTML("<span>🩸 <strong>Aggressive Glycemic Screening</strong><br><small style='opacity: 0.8;'>BMI Baseline | HbA1c -0.5%</small></span>"),
+                  style = "width: 100%; text-align: left; background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; padding: 7px 10px; border-radius: 6px; font-size: 12px; margin-bottom: 4px;"
+                ),
+                actionButton(
+                  "btn_preset_dual", 
+                  HTML("<span>🌟 <strong>Combined Dual Intervention</strong><br><small style='opacity: 0.8;'>BMI -10% | HbA1c -0.5%</small></span>"),
+                  style = "width: 100%; text-align: left; background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; padding: 7px 10px; border-radius: 6px; font-size: 12px; margin-bottom: 4px;"
+                ),
+                actionButton(
+                  "btn_preset_reset", 
+                  HTML("<span>🔄 <strong>Baseline (Reset)</strong><br><small style='opacity: 0.8;'>No Population Interventions</small></span>"),
+                  style = "width: 100%; text-align: left; background: #f8fafc; border: 1px solid #cbd5e1; color: #334155; padding: 7px 10px; border-radius: 6px; font-size: 12px; margin-bottom: 4px;"
+                )
+              )
+            ),
             sliderInput(
               "sim_bmi_drop", 
               "Population BMI Reduction:",
@@ -1562,6 +1579,27 @@ server <- function(input, output, session) {
   
   # --- TAB: Simulator Server Output ---
   
+  # Preset Scenario Button Observers
+  observeEvent(input$btn_preset_bmi5, {
+    updateSliderInput(session, "sim_bmi_drop", value = 5)
+    updateSliderInput(session, "sim_hba1c_drop", value = 0.0)
+  })
+  
+  observeEvent(input$btn_preset_hba1c, {
+    updateSliderInput(session, "sim_bmi_drop", value = 0)
+    updateSliderInput(session, "sim_hba1c_drop", value = 0.5)
+  })
+  
+  observeEvent(input$btn_preset_dual, {
+    updateSliderInput(session, "sim_bmi_drop", value = 10)
+    updateSliderInput(session, "sim_hba1c_drop", value = 0.5)
+  })
+  
+  observeEvent(input$btn_preset_reset, {
+    updateSliderInput(session, "sim_bmi_drop", value = 0)
+    updateSliderInput(session, "sim_hba1c_drop", value = 0.0)
+  })
+  
   # Reactive calculations for BMI and HbA1c shift simulation
   sim_data <- reactive({
     bmi_drop_pct <- if (!is.null(input$sim_bmi_drop)) input$sim_bmi_drop else 0
@@ -1787,6 +1825,11 @@ server <- function(input, output, session) {
       sample_n(2000) %>%
       mutate(Diabetes_Status = ifelse(diabetes == 1, "Diabetic", "Non-Diabetic"))
       
+    min_g <- min(df_sample$blood_glucose_level)
+    max_g <- max(df_sample$blood_glucose_level)
+    min_h <- min(df_sample$HbA1c_level)
+    max_h <- max(df_sample$HbA1c_level)
+
     plot_ly(
       df_sample, 
       x = ~blood_glucose_level, 
@@ -1806,21 +1849,59 @@ server <- function(input, output, session) {
       )
     ) %>%
       add_trace(
-        x = c(min(df_sample$blood_glucose_level), max(df_sample$blood_glucose_level)),
+        x = c(min_g - 5, max_g + 15),
         y = c(6.5, 6.5),
         type = "scatter",
         mode = "lines",
-        name = "Diabetes Threshold (6.5%)",
+        name = "HbA1c Threshold (6.5%)",
         line = list(color = "#d9534f", width = 2, dash = "dash"),
+        inherit = FALSE
+      ) %>%
+      add_trace(
+        x = c(140, 140),
+        y = c(min_h - 0.5, max_h + 1),
+        type = "scatter",
+        mode = "lines",
+        name = "Glucose Threshold (140 mg/dL)",
+        line = list(color = "#f0ad4e", width = 2, dash = "dash"),
         inherit = FALSE
       ) %>%
       layout(
         xaxis = list(title = "Blood Glucose Level (mg/dL)", titlefont = list(size = 11, family = "Lucida Grande, sans-serif")),
         yaxis = list(title = "HbA1c Level (%)", titlefont = list(size = 11, family = "Lucida Grande, sans-serif")),
-        legend = list(title = list(text = "<b>Diagnosis</b>"), font = list(size = 10, family = "Lucida Grande, sans-serif")),
+        legend = list(title = list(text = "<b>Diagnosis & Limits</b>"), font = list(size = 10, family = "Lucida Grande, sans-serif")),
         paper_bgcolor = "rgba(0,0,0,0)",
         plot_bgcolor = "rgba(0,0,0,0)",
-        margin = list(t = 20, b = 40, l = 40, r = 20)
+        margin = list(t = 25, b = 40, l = 40, r = 20),
+        shapes = list(
+          list(
+            type = "rect",
+            xref = "x",
+            yref = "y",
+            x0 = 140,
+            x1 = max_g + 20,
+            y0 = 6.5,
+            y1 = max_h + 1,
+            fillcolor = "rgba(239, 68, 68, 0.12)",
+            line = list(color = "rgba(220, 38, 38, 0.4)", width = 1.5, dash = "dot"),
+            layer = "below"
+          )
+        ),
+        annotations = list(
+          list(
+            x = min(max_g - 30, 230),
+            y = min(max_h - 0.3, 8.4),
+            xref = "x",
+            yref = "y",
+            text = "<b>High-Risk Diagnostic Region</b><br>(HbA1c ≥ 6.5% & Glucose ≥ 140 mg/dL)",
+            showarrow = FALSE,
+            font = list(family = "Lucida Grande, sans-serif", size = 10, color = "#991b1b"),
+            bgcolor = "rgba(254, 226, 226, 0.92)",
+            bordercolor = "#f87171",
+            borderwidth = 1,
+            borderpad = 5
+          )
+        )
       )
   })
   
